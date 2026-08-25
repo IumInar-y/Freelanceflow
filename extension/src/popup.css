@@ -1,0 +1,363 @@
+/* FreelanceFlow AI popup — "paper brief" theme.
+   Scoped under .ff to stay independent of any host page styles. */
+
+.ff {
+  --font-display: 'Bricolage Grotesque Variable', -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px 16px;
+  gap: 12px;
+  min-height: 240px;
+}
+
+/* ── Header ─────────────────────────────────────────────────────── */
+
+.ff-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ff-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.ff-brand {
+  display: flex;
+  flex-direction: column;
+  margin-right: auto;
+}
+
+.ff-name {
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.ff-tag {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.ff-rail {
+  display: flex;
+  gap: 5px;
+}
+
+.ff-rail-seg {
+  width: 18px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+  transition: background-color 0.2s ease;
+}
+
+.ff-rail-seg.is-current {
+  background: var(--accent);
+}
+
+.ff-rail-seg.is-done {
+  background: var(--ink);
+}
+
+/* ── Steps ──────────────────────────────────────────────────────── */
+
+.ff-step {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: ff-rise 0.18s ease-out;
+}
+
+@keyframes ff-rise {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ff-step {
+    animation: none;
+  }
+  .ff-dots i {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ── Input step ─────────────────────────────────────────────────── */
+
+.ff-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ff-input {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink);
+  font-size: 13px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ff-input::placeholder {
+  color: var(--muted);
+}
+
+.ff-input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.ff-hint {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: -4px;
+}
+
+.ff-hint::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────── */
+
+.ff-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    opacity 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.ff-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.ff-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ff-btn-primary {
+  background: var(--ink);
+  color: #fff;
+}
+
+.ff-btn-primary:hover:not(:disabled) {
+  background: #3a332b;
+}
+
+.ff-btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ff-btn-copied {
+  background: #1f7a3d;
+  color: #fff;
+}
+
+.ff-back {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 2px;
+  align-self: center;
+}
+
+.ff-back:hover {
+  color: var(--ink);
+}
+
+.ff-back:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.ff-dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.ff-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: ff-pulse 1s ease-in-out infinite;
+}
+
+.ff-dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.ff-dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes ff-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ── Errors ─────────────────────────────────────────────────────── */
+
+.ff-error {
+  padding: 8px 11px;
+  border: 1px solid #f0c4ad;
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  background: #fdf1e7;
+  color: #7c3410;
+  font-size: 12px;
+}
+
+/* ── Job card ───────────────────────────────────────────────────── */
+
+.ff-jobcard {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 13px 14px;
+}
+
+.ff-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.ff-platform {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.ff-budget {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.ff-jobtitle {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.ff-skills {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.ff-skills li {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 2px 9px;
+  background: var(--paper);
+}
+
+/* ── Proposal document ──────────────────────────────────────────── */
+/* The signature element: the deliverable presented as a lit paper
+   document with an accent rule at its head. */
+
+.ff-doc {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow:
+    0 1px 2px rgba(33, 29, 24, 0.05),
+    0 4px 14px rgba(33, 29, 24, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ff-dochead {
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), #f59a66);
+  flex-shrink: 0;
+}
+
+.ff-docbody {
+  margin: 0;
+  padding: 13px 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--ink);
+  max-height: 220px;
+  overflow-y: auto;
+}

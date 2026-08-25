@@ -1,5 +1,6 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import '@fontsource-variable/bricolage-grotesque';
 
 declare const __BACKEND_URL__: string;
 const BACKEND_URL = __BACKEND_URL__;
@@ -31,201 +32,17 @@ async function getActiveTabUrl(): Promise<string | null> {
   return tab?.url ?? null;
 }
 
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '16px',
-    gap: '12px',
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    paddingBottom: '12px',
-    borderBottom: '1px solid #1e293b',
-  },
-  logo: {
-    width: '28px',
-    height: '28px',
-    borderRadius: '6px',
-    background: 'linear-gradient(135deg, #e67e22, #f39c12)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '14px',
-    fontWeight: '700',
-    color: '#fff',
-    flexShrink: 0,
-  },
-  headerText: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  title: {
-    fontSize: '13px',
-    fontWeight: '700',
-    color: '#f1f5f9',
-    letterSpacing: '-0.01em',
-  },
-  subtitle: {
-    fontSize: '11px',
-    color: '#64748b',
-  },
-  label: {
-    fontSize: '11px',
-    fontWeight: '600',
-    color: '#94a3b8',
-    letterSpacing: '0.05em',
-    textTransform: 'uppercase' as const,
-    marginBottom: '4px',
-  },
-  input: {
-    width: '100%',
-    padding: '8px 10px',
-    background: '#1e293b',
-    border: '1px solid #334155',
-    borderRadius: '6px',
-    color: '#f1f5f9',
-    fontSize: '13px',
-    outline: 'none',
-  },
-  primaryBtn: {
-    width: '100%',
-    padding: '9px 12px',
-    background: 'linear-gradient(135deg, #e67e22, #f39c12)',
-    border: 'none',
-    borderRadius: '6px',
-    color: '#fff',
-    fontSize: '13px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'opacity 0.15s',
-  },
-  secondaryBtn: {
-    width: '100%',
-    padding: '9px 12px',
-    background: '#1e293b',
-    border: '1px solid #334155',
-    borderRadius: '6px',
-    color: '#94a3b8',
-    fontSize: '13px',
-    fontWeight: '600',
-    cursor: 'pointer',
-  },
-  successBtn: {
-    width: '100%',
-    padding: '9px 12px',
-    background: '#15803d',
-    border: 'none',
-    borderRadius: '6px',
-    color: '#fff',
-    fontSize: '13px',
-    fontWeight: '600',
-    cursor: 'pointer',
-  },
-  card: {
-    background: '#1e293b',
-    border: '1px solid #334155',
-    borderRadius: '8px',
-    padding: '12px',
-  },
-  jobTitle: {
-    fontSize: '14px',
-    fontWeight: '700',
-    color: '#f1f5f9',
-    marginBottom: '6px',
-    lineHeight: '1.3',
-  },
-  platformBadge: {
-    display: 'inline-block',
-    padding: '2px 8px',
-    background: '#0f172a',
-    border: '1px solid #334155',
-    borderRadius: '20px',
-    fontSize: '11px',
-    color: '#94a3b8',
-    marginBottom: '8px',
-  },
-  row: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '4px',
-    marginBottom: '8px',
-  },
-  metaLabel: {
-    fontSize: '11px',
-    color: '#64748b',
-    fontWeight: '600',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.05em',
-  },
-  metaValue: {
-    fontSize: '12px',
-    color: '#cbd5e1',
-  },
-  skillsWrap: {
-    display: 'flex',
-    flexWrap: 'wrap' as const,
-    gap: '4px',
-  },
-  skill: {
-    padding: '2px 8px',
-    background: '#0f172a',
-    border: '1px solid #e67e22',
-    borderRadius: '20px',
-    fontSize: '11px',
-    color: '#e67e22',
-  },
-  textarea: {
-    width: '100%',
-    height: '200px',
-    padding: '10px',
-    background: '#1e293b',
-    border: '1px solid #334155',
-    borderRadius: '6px',
-    color: '#f1f5f9',
-    fontSize: '12px',
-    lineHeight: '1.6',
-    resize: 'vertical' as const,
-    outline: 'none',
-    fontFamily: 'inherit',
-  },
-  error: {
-    padding: '8px 10px',
-    background: '#450a0a',
-    border: '1px solid #7f1d1d',
-    borderRadius: '6px',
-    color: '#fca5a5',
-    fontSize: '12px',
-  },
-  link: {
-    background: 'none',
-    border: 'none',
-    color: '#64748b',
-    fontSize: '12px',
-    cursor: 'pointer',
-    textDecoration: 'underline',
-    padding: '0',
-    textAlign: 'center' as const,
-    width: '100%',
-  },
-  spinner: {
-    display: 'inline-block',
-    width: '14px',
-    height: '14px',
-    border: '2px solid rgba(255,255,255,0.3)',
-    borderTopColor: '#fff',
-    borderRadius: '50%',
-    animation: 'spin 0.7s linear infinite',
-    marginRight: '6px',
-    verticalAlign: 'middle',
-  },
+const STEP_ORDER: Step[] = ['input', 'job', 'proposal'];
+const STEP_LABELS: Record<Step, string> = {
+  input: 'Link',
+  job: 'Job',
+  proposal: 'Proposal',
 };
 
 export default function App() {
   const [step, setStep] = useState<Step>('input');
   const [url, setUrl] = useState('');
+  const [autofilled, setAutofilled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [job, setJob] = useState<JobDetails | null>(null);
   const [proposal, setProposal] = useState('');
@@ -234,7 +51,10 @@ export default function App() {
 
   useEffect(() => {
     getActiveTabUrl().then((tabUrl) => {
-      if (tabUrl && isJobListingUrl(tabUrl)) setUrl(tabUrl);
+      if (tabUrl && isJobListingUrl(tabUrl)) {
+        setUrl(tabUrl);
+        setAutofilled(true);
+      }
     });
   }, []);
 
@@ -249,13 +69,14 @@ export default function App() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? 'Failed to fetch job details.');
+        setError(data.error ?? 'Could not read that listing. Check the URL and try again.');
       } else {
         setJob(data as JobDetails);
+        setAutofilled(false);
         setStep('job');
       }
     } catch {
-      setError('Network error — make sure the FreelanceFlow AI server is running.');
+      setError('Cannot reach the FreelanceFlow server. Make sure it is running.');
     } finally {
       setLoading(false);
     }
@@ -273,13 +94,13 @@ export default function App() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? 'Failed to generate proposal.');
+        setError(data.error ?? 'Generation failed. Try again.');
       } else {
         setProposal(data.proposal as string);
         setStep('proposal');
       }
     } catch {
-      setError('Network error — make sure the FreelanceFlow AI server is running.');
+      setError('Cannot reach the FreelanceFlow server. Make sure it is running.');
     } finally {
       setLoading(false);
     }
@@ -295,6 +116,7 @@ export default function App() {
   function reset() {
     setStep('input');
     setUrl('');
+    setAutofilled(false);
     setJob(null);
     setProposal('');
     setError('');
@@ -302,112 +124,143 @@ export default function App() {
   }
 
   return (
-    <div style={styles.container}>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      <div style={styles.header}>
-        <div style={styles.logo}>F</div>
-        <div style={styles.headerText}>
-          <span style={styles.title}>FreelanceFlow AI</span>
-          <span style={styles.subtitle}>Proposal Generator</span>
+    <div className="ff">
+      <header className="ff-head">
+        <div className="ff-mark" aria-hidden="true">
+          F
         </div>
-      </div>
+        <div className="ff-brand">
+          <span className="ff-name">FreelanceFlow AI</span>
+          <span className="ff-tag">Proposal generator</span>
+        </div>
+        <nav className="ff-rail" aria-label={`Step ${STEP_ORDER.indexOf(step) + 1} of 3`}>
+          {STEP_ORDER.map((s) => (
+            <span
+              key={s}
+              className={`ff-rail-seg${s === step ? ' is-current' : ''}${
+                STEP_ORDER.indexOf(s) < STEP_ORDER.indexOf(step) ? ' is-done' : ''
+              }`}
+              title={STEP_LABELS[s]}
+            />
+          ))}
+        </nav>
+      </header>
 
       {step === 'input' && (
-        <>
-          <div>
-            <div style={styles.label}>Job Listing URL</div>
-            <input
-              style={styles.input}
-              type="url"
-              placeholder="https://www.upwork.com/jobs/..."
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && url && !loading) fetchJob();
-              }}
-            />
-          </div>
-          {error && <div style={styles.error}>{error}</div>}
+        <section key="input" className="ff-step">
+          <label className="ff-eyebrow" htmlFor="ff-url">
+            Job listing link
+          </label>
+          <input
+            id="ff-url"
+            className="ff-input"
+            type="url"
+            placeholder="Paste an Upwork or Freelancer URL…"
+            value={url}
+            onChange={(e) => {
+              setUrl(e.target.value);
+              setAutofilled(false);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && url && !loading) fetchJob();
+            }}
+          />
+          {autofilled && !loading && <p className="ff-hint">Pulled from this tab — edit if needed.</p>}
+          {error && (
+            <p className="ff-error" role="alert">
+              {error}
+            </p>
+          )}
           <button
             type="button"
-            style={{ ...styles.primaryBtn, opacity: loading || !url ? 0.6 : 1 }}
+            className="ff-btn ff-btn-primary"
             onClick={fetchJob}
             disabled={loading || !url}
           >
             {loading ? (
               <>
-                <span style={styles.spinner} />
-                Fetching…
+                <span className="ff-dots" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                Reading listing
               </>
             ) : (
-              'Fetch Job Details'
+              'Read job listing'
             )}
           </button>
-        </>
+        </section>
       )}
 
       {step === 'job' && job && (
-        <>
-          <div style={styles.card}>
-            <span style={styles.platformBadge}>{job.platform}</span>
-            <div style={styles.jobTitle}>{job.title}</div>
-            {job.budget && (
-              <div style={styles.row}>
-                <span style={styles.metaLabel}>Budget</span>
-                <span style={styles.metaValue}>{job.budget}</span>
-              </div>
-            )}
+        <section key="job" className="ff-step">
+          <article className="ff-jobcard">
+            <p className="ff-meta">
+              <span className="ff-platform">{job.platform}</span>
+              {job.budget && <span className="ff-budget">{job.budget}</span>}
+            </p>
+            <h1 className="ff-jobtitle">{job.title}</h1>
             {(job.skills?.length ?? 0) > 0 && (
-              <div style={styles.row}>
-                <span style={styles.metaLabel}>Skills</span>
-                <div style={styles.skillsWrap}>
-                  {job.skills.map((s) => (
-                    <span key={s} style={styles.skill}>
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              <ul className="ff-skills">
+                {job.skills.map((s) => (
+                  <li key={s}>{s}</li>
+                ))}
+              </ul>
             )}
-          </div>
-          {error && <div style={styles.error}>{error}</div>}
+          </article>
+          {error && (
+            <p className="ff-error" role="alert">
+              {error}
+            </p>
+          )}
           <button
             type="button"
-            style={{ ...styles.primaryBtn, opacity: loading ? 0.6 : 1 }}
+            className="ff-btn ff-btn-primary"
             onClick={generateProposal}
             disabled={loading}
           >
             {loading ? (
               <>
-                <span style={styles.spinner} />
-                Generating…
+                <span className="ff-dots" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                Writing proposal
               </>
             ) : (
-              'Generate Proposal'
+              'Write my proposal'
             )}
           </button>
-          <button type="button" style={styles.link} onClick={reset}>
-            Start over
+          <button type="button" className="ff-back" onClick={reset}>
+            Use a different link
           </button>
-        </>
+        </section>
       )}
 
       {step === 'proposal' && (
-        <>
-          <div style={styles.label}>Your Proposal</div>
-          <textarea style={styles.textarea} readOnly value={proposal} />
-          {error && <div style={styles.error}>{error}</div>}
+        <section key="proposal" className="ff-step">
+          <div className="ff-doc">
+            <div className="ff-dochead" aria-hidden="true" />
+            <pre className="ff-docbody">{proposal}</pre>
+          </div>
+          {error && (
+            <p className="ff-error" role="alert">
+              {error}
+            </p>
+          )}
           <button
             type="button"
-            style={copied ? styles.successBtn : styles.primaryBtn}
+            className={`ff-btn ${copied ? 'ff-btn-copied' : 'ff-btn-primary'}`}
             onClick={copyProposal}
           >
-            {copied ? '✓ Copied!' : 'Copy to Clipboard'}
+            {copied ? 'Copied to clipboard' : 'Copy proposal'}
           </button>
-          <button type="button" style={styles.link} onClick={reset}>
-            Start over with a new job
+          <button type="button" className="ff-back" onClick={reset}>
+            Start a new proposal
           </button>
-        </>
+        </section>
       )}
     </div>
   );
