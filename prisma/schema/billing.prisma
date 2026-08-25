@@ -1,0 +1,22 @@
+// User plan state — records verified Stripe payments so subscription status
+// can be read from the DB without relying solely on the Polsia proxy API.
+// Keyed by email (from Stripe checkout); userId links to better-auth User
+// once the subscriber creates an account. NO @relation to User (auth.prisma
+// is framework-owned; scalar FK per module conventions).
+model UserPlan {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  userId           String?
+  plan             String    // 'free' | 'solo' | 'pro'
+  source           String?   // 'stripe_checkout' | 'admin_grant' (nullable: backfills legacy rows)
+  stripeSessionId  String?   @unique
+  active           Boolean   @default(true)
+  verifiedAt       DateTime  @default(now())
+  activatedAt      DateTime  @default(now())
+  expiresAt        DateTime?
+  paymentFailedAt  DateTime?
+  hasSeenProTour   Boolean   @default(false)
+  updatedAt        DateTime  @updatedAt
+
+  @@index([userId])
+}

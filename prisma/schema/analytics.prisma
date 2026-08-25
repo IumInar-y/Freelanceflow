@@ -1,0 +1,13 @@
+model UpsellEvent {
+  id          String   @id @default(cuid())
+  eventType   String   // 'click' | 'upgrade'
+  source      String?  // 'platform_badge' | 'row_limit_badge' | 'advanced_analytics' | 'export_csv' | 'activate'
+  email       String?
+  userId      String?  // scalar FK, no @relation
+  plan        String?  // 'pro' | 'solo'
+  amountUsd   Float?
+  createdAt   DateTime @default(now())
+
+  @@index([eventType])
+  @@index([createdAt])
+}

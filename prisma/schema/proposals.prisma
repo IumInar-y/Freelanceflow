@@ -1,0 +1,15 @@
+model ProposalEntry {
+  id        String   @id @default(cuid())
+  email     String
+  userId    String?
+  client    String
+  platform  String
+  dateSent  String
+  status    String
+  value     Float
+  body      String?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([userId])
+}

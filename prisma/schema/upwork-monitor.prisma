@@ -1,0 +1,37 @@
+// Upwork job-feed monitor slice — materialized by `npx prisma db push`
+// during deploy (no migration directory, per templated db-push strategy).
+//
+// User-authored filter — one row per saved filter; per-user-scoped once a future
+// `/api/...` route exposes CRUD under requireAuth() + where: { userId: user.id }.
+// `userId` is a scalar FK to public.user.id (UUID String, no @relation by policy).
+model UserSavedFilter {
+  id            String    @id @default(cuid())
+  userId        String?   // scalar FK to public.user.id; no @relation by policy
+  query         String
+  category      String?
+  postedAfter   DateTime? // filter input: lower bound on postedAt for next-poll results (do NOT auto-advance on success)
+  lastSeenJobId String?   // cursor: highest jobId already emitted; persist-only, never re-emit
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+// 24h log of matches per user; cron prunes anything older than 24h at top of each tick. Only
+// fields already public on an Upwork listing are persisted — no client name, no client country,
+// no budget, no proposal text.
+model MatchedJob {
+  id          String    @id @default(cuid())
+  userId      String?   // scalar FK; no @relation by policy
+  filterId    String
+  jobId       String    // upstream job identifier (e.g. Upwork job id)
+  title       String?
+  category    String?
+  description String?   // free-text job body; read by /api/proposals/tailor-from-job
+  postedAt    DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([filterId])
+  @@index([createdAt]) // supports pruneOlderThan24h
+}

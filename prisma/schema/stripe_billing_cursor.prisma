@@ -1,0 +1,10 @@
+// Durable cursor between cron drain invocations of the Polsia payment-events
+// feed (see src/lib/stripe-billing/fulfillment.ts). Single-row singleton
+// (id=1), advanced by the cron AFTER every event is processed; on a failed
+// event the cursor stays put and the event redelivers next run.
+
+model StripeBillingCursor {
+  id        Int      @id @default(1)
+  cursor    Int      @default(0)
+  updatedAt DateTime @updatedAt
+}

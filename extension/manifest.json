@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "FreelanceFlow AI",
+  "version": "1.0.0",
+  "description": "Generate winning freelance proposals in one click from any job listing.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "FreelanceFlow AI Proposal Generator"
+  },
+  "permissions": ["activeTab", "storage"],
+  "host_permissions": ["http://localhost:3000/*", "https://*.vercel.app/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

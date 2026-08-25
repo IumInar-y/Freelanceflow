@@ -1,0 +1,10 @@
+model EmailCapture {
+  id                 String    @id @default(cuid())
+  email              String    @unique
+  source             String
+  createdAt          DateTime  @default(now())
+  email1SentAt       DateTime?
+  email2SentAt       DateTime?
+  email3SentAt       DateTime?
+  upgradeNudgeSentAt DateTime?
+}
