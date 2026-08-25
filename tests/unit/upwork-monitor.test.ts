@@ -142,7 +142,9 @@ describe('projectPollOneFilter — per-filter error isolation', () => {
     const client = {
       searchJobs: (f: SearchJobsFilter) => {
         if (f.query === 'a-bad') throw new Error('boom');
-        return [{ id: `${f.query}-0`, title: 't', category: null, description: null, postedAt: null }];
+        return [
+          { id: `${f.query}-0`, title: 't', category: null, description: null, postedAt: null },
+        ];
       },
     };
     const result = await projectPollOneFilter(filters, client, async (filter, jobs) => {
