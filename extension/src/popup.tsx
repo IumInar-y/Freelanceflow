@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 declare const __BACKEND_URL__: string;
 const BACKEND_URL = __BACKEND_URL__;
@@ -13,6 +13,23 @@ interface JobDetails {
 }
 
 type Step = 'input' | 'job' | 'proposal';
+
+const JOB_BOARD_HOSTS = ['upwork.com', 'freelancer.com', 'freelancer.ca', 'guru.com', 'fiverr.com'];
+
+function isJobListingUrl(url: string): boolean {
+  try {
+    const host = new URL(url).hostname;
+    return JOB_BOARD_HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
+  } catch {
+    return false;
+  }
+}
+
+async function getActiveTabUrl(): Promise<string | null> {
+  if (!chrome?.tabs?.query) return null;
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  return tab?.url ?? null;
+}
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
@@ -215,6 +232,12 @@ export default function App() {
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
+  useEffect(() => {
+    getActiveTabUrl().then((tabUrl) => {
+      if (tabUrl && isJobListingUrl(tabUrl)) setUrl(tabUrl);
+    });
+  }, []);
+
   async function fetchJob() {
     setError('');
     setLoading(true);
@@ -300,7 +323,7 @@ export default function App() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' && url) fetchJob();
+                if (e.key === 'Enter' && url && !loading) fetchJob();
               }}
             />
           </div>
@@ -334,7 +357,7 @@ export default function App() {
                 <span style={styles.metaValue}>{job.budget}</span>
               </div>
             )}
-            {job.skills.length > 0 && (
+            {(job.skills?.length ?? 0) > 0 && (
               <div style={styles.row}>
                 <span style={styles.metaLabel}>Skills</span>
                 <div style={styles.skillsWrap}>
