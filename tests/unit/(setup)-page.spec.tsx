@@ -17,7 +17,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 vi.mock('@/components/scanner/proposal-scanner', () => ({
   ProposalScanner: () => null,
@@ -95,8 +95,10 @@ describe('home page hero CTA contract', () => {
       root.render(<HomePage />);
     });
 
-    const heroBadge = Array.from(container.querySelectorAll('span')).find((el) =>
-      (el.textContent ?? '').includes('Chrome Extension — Early Access'),
+    const heroBadge = Array.from(container.querySelectorAll('div')).find(
+      (el) =>
+        el.children.length === 0 &&
+        (el.textContent ?? '').includes('Chrome Extension — Early Access'),
     );
     expect(heroBadge).toBeTruthy();
 

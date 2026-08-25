@@ -43,10 +43,13 @@ describe('.polsia/ownership.json', () => {
     'src/app/robots.ts',
     'src/app/sitemap.ts',
     'src/app/manifest.ts',
-    'src/app/icon.svg',
     'src/app/opengraph-image.tsx',
   ])('keeps template-shipped %s framework_owned', (path) => {
     expect(find(path)?.tier).toBe('framework_owned');
+  });
+
+  it('keeps the brand-replaceable src/app/icon.svg user_owned', () => {
+    expect(find('src/app/icon.svg')?.tier).toBe('user_owned');
   });
 
   it.each(['src/app/api/example/**', 'src/lib/contracts/example.ts'])(

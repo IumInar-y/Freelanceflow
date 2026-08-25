@@ -15,7 +15,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 let currentIsPro = false;
 
@@ -142,7 +142,7 @@ describe('tracker tier banner — free vs Pro rendered HTML smoke', () => {
     await wait(50);
 
     const upsellCall = mockedApiFetch.mock.calls.find(
-      ([p]: [string]) => p === '/api/analytics/upsell-click',
+      (call) => call[0] === '/api/analytics/upsell-click',
     );
     expect(upsellCall).toBeTruthy();
     const upsellBody = JSON.parse(

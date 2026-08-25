@@ -94,11 +94,11 @@ describe('selectNewJobs — dedup behavior', () => {
 
   it('sorts before comparing so an out-of-order cursor boundary still cuts correctly', () => {
     const raw = [
-      { id: 'h-3', title: null, category: null, postedAt: null },
-      { id: 'h-0', title: null, category: null, postedAt: null },
-      { id: 'h-4', title: null, category: null, postedAt: null },
-      { id: 'h-1', title: null, category: null, postedAt: null },
-      { id: 'h-2', title: null, category: null, postedAt: null },
+      { id: 'h-3', title: null, category: null, description: null, postedAt: null },
+      { id: 'h-0', title: null, category: null, description: null, postedAt: null },
+      { id: 'h-4', title: null, category: null, description: null, postedAt: null },
+      { id: 'h-1', title: null, category: null, description: null, postedAt: null },
+      { id: 'h-2', title: null, category: null, description: null, postedAt: null },
     ];
     expect(selectNewJobs(raw, 'h-2').map((j) => j.id)).toEqual(['h-3', 'h-4']);
   });
@@ -123,8 +123,8 @@ describe('projectPollOneFilter — per-filter error isolation', () => {
       searchJobs: (f: SearchJobsFilter) => {
         if (f.query === 'bad') throw new Error('boom');
         return [
-          { id: `${f.query}-0`, title: 't', category: null, postedAt: null },
-          { id: `${f.query}-1`, title: 't', category: null, postedAt: null },
+          { id: `${f.query}-0`, title: 't', category: null, description: null, postedAt: null },
+          { id: `${f.query}-1`, title: 't', category: null, description: null, postedAt: null },
         ];
       },
     };
@@ -142,7 +142,7 @@ describe('projectPollOneFilter — per-filter error isolation', () => {
     const client = {
       searchJobs: (f: SearchJobsFilter) => {
         if (f.query === 'a-bad') throw new Error('boom');
-        return [{ id: `${f.query}-0`, title: 't', category: null, postedAt: null }];
+        return [{ id: `${f.query}-0`, title: 't', category: null, description: null, postedAt: null }];
       },
     };
     const result = await projectPollOneFilter(filters, client, async (filter, jobs) => {
@@ -156,8 +156,8 @@ describe('projectPollOneFilter — per-filter error isolation', () => {
   it('cursor advancement on the good filter is reflected in dedup on a second call', async () => {
     const filter = makeFilter('good', null);
     const seededJobs = [
-      { id: 'good-0', title: 't', category: null, postedAt: null },
-      { id: 'good-1', title: 't', category: null, postedAt: null },
+      { id: 'good-0', title: 't', category: null, description: null, postedAt: null },
+      { id: 'good-1', title: 't', category: null, description: null, postedAt: null },
     ];
     let lastSeen: string | null = null;
     const client = {
